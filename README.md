@@ -1,5 +1,5 @@
-# WeOcetrac
-> Summary description here.
+# Ocetrac
+> Python package to track marine heatwaves.
 
 
 This file will become your README and also the index of your documentation.
@@ -13,12 +13,12 @@ This file will become your README and also the index of your documentation.
 Fill me in please! Don't forget code examples:
 
 ```python
-1+1
+say_hello("Hillary")
 ```
 
 
 
 
-    2
+    'Hello {to}!'
 
 

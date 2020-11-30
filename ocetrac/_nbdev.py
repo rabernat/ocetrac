@@ -2,9 +2,9 @@
 
 __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 
-index = {"say_hello": "00_label.ipynb"}
+index = {"say_hello": "00_core.ipynb"}
 
-modules = ["label.py"]
+modules = ["core.py"]
 
 doc_url = "https://hscannell.github.io/ocetrac/"
 

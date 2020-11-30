@@ -11,7 +11,7 @@ entries:
       url: /
     - output: web,pdf
       title: Ocetrac
-      url: label.html
+      url: core.html
     output: web
     title: ocetrac
   output: web
