@@ -1,16 +1,16 @@
 # Ocetrac
-> Python package to track marine heatwaves.
+> python package to track marine heatwaves.
 
 
-This file will become your README and also the index of your documentation.
+This repo contains code to track, label, and characterize the spatiotemporal evolution of marine heatwaves. 
 
 ## Install
 
-`pip install your_project_name`
+`pip install ocetrac`
 
 ## How to use
 
-Fill me in please! Don't forget code examples:
+Let's see this as work
 
 ```python
 say_hello("Hillary")
@@ -19,6 +19,6 @@ say_hello("Hillary")
 
 
 
-    'Hello {to}!'
+    'Hello Hillary!'
 
 
