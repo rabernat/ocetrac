@@ -6,8 +6,8 @@ title: Ocetrac
 keywords: fastai
 sidebar: home_sidebar
 
-summary: "API details."
-description: "API details."
+summary: "Track and label marine heatwaves from geospatial data. "
+description: "Track and label marine heatwaves from geospatial data. "
 nb_path: "00_core.ipynb"
 ---
 <!--
@@ -29,6 +29,12 @@ nb_path: "00_core.ipynb"
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Functions">Functions<a class="anchor-link" href="#Functions"> </a></h2>
+</div>
+</div>
+</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -40,9 +46,9 @@ nb_path: "00_core.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="say_hello" class="doc_header"><code>say_hello</code><a href="https://github.com/hscannell/ocetrac/tree/master/ocetrac/core.py#L6" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>say_hello</code>(<strong><code>to</code></strong>)</p>
+<h4 id="label_2D" class="doc_header"><code>label_2D</code><a href="https://github.com/hscannell/ocetrac/tree/master/ocetrac/core.py#L6" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>label_2D</code>(<strong><code>da</code></strong>, <strong><code>fieldname</code></strong>)</p>
 </blockquote>
-<p>Say hello to somebody</p>
+<p>2D image labeling</p>
 
 </div>
 
@@ -63,7 +69,14 @@ nb_path: "00_core.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We can use this to say hello to anyone at all, but let's start with Hillary.</p>
+<p><code>label</code> lets us identify marine heatwaves as 2-dimensional objects using morphological image processing. Let's run through an example using the NOAA Optimum Interpolation Sea Surface Temperature (OISST) dataset. We are using data that had been preprocessed as to keep only those anomalies that exceed the 90th percentile with respect to the 1981-2020 monthly climatology.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's test <code>_check_input</code> to make sure that our data is either an <code>xr.DataArray</code> or <code>xr.Dataset</code></p>
 
 </div>
 </div>
@@ -75,12 +88,28 @@ nb_path: "00_core.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">say_hello</span><span class="p">(</span><span class="s1">&#39;Hillary&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">data_array</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">,</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span><span class="s1">&#39;lon&#39;</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;test&#39;</span><span class="p">,</span>
+                          <span class="n">coords</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span>
+                                  <span class="s1">&#39;lat&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+                                  <span class="s1">&#39;lon&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">3</span><span class="p">)})</span>
+
+<span class="n">data_out</span> <span class="o">=</span> <span class="n">_check_input</span><span class="p">(</span><span class="n">data_array</span><span class="p">,</span><span class="s1">&#39;test&#39;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">data_out</span><span class="p">)</span><span class="o">==</span><span class="n">xr</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">dataarray</span><span class="o">.</span><span class="n">DataArray</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">data_out</span><span class="p">)</span><span class="o">==</span><span class="n">xr</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">dataarray</span><span class="o">.</span><span class="n">Dataset</span>
 </pre></div>
 
     </div>
 </div>
 </div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
 
 <div class="output_wrapper">
 <div class="output">
@@ -88,9 +117,11 @@ nb_path: "00_core.ipynb"
 <div class="output_area">
 
 
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="track_3D" class="doc_header"><code>track_3D</code><a href="https://github.com/hscannell/ocetrac/tree/master/ocetrac/core.py#L57" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>track_3D</code>(<strong><code>da</code></strong>, <strong><code>fieldname</code></strong>)</p>
+</blockquote>
+<p>Track labeled marine heatwaves</p>
 
-<div class="output_text output_subarea output_execute_result">
-<pre>&#39;Hello Hillary!&#39;</pre>
 </div>
 
 </div>
@@ -101,24 +132,89 @@ nb_path: "00_core.ipynb"
 </div>
     {% endraw %}
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Let's test <a href="/ocetrac/core.html#say_hello"><code>say_hello</code></a> by passing it a test</p>
-
-</div>
-</div>
-</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
 
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">say_hello</span><span class="p">(</span><span class="s2">&quot;Hillary&quot;</span><span class="p">)</span><span class="o">==</span><span class="s2">&quot;Hello Hillary!&quot;</span>
-</pre></div>
+</div>
+    {% endraw %}
 
-    </div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="mhw" class="doc_header"><code>class</code> <code>mhw</code><a href="https://github.com/hscannell/ocetrac/tree/master/ocetrac/core.py#L91" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>mhw</code>(<strong><code>ssta</code></strong>)</p>
+</blockquote>
+<p>Label <code>ssta</code> using <a href="/ocetrac/core.html#mhw"><code>mhw</code></a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="mhw.label" class="doc_header"><code>mhw.label</code><a href="https://github.com/hscannell/ocetrac/tree/master/ocetrac/core.py#L96" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mhw.label</code>()</p>
+</blockquote>
+<p>Assign labels to marine heatwaves</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="mhw.track" class="doc_header"><code>mhw.track</code><a href="https://github.com/hscannell/ocetrac/tree/master/ocetrac/core.py#L100" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mhw.track</code>()</p>
+</blockquote>
+<p>Track identified marine heatwaves from <code>label</code> in time</p>
+
+</div>
+
+</div>
+
 </div>
 </div>
 
