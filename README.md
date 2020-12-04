@@ -1,14 +1,6 @@
-![](https://github.com/fastai/nbdev/workflows/CI/badge.svg)
-
-
 # Ocetrac
 > python package to track marine heatwaves.
 
-
-```
-%load_ext autoreload
-%autoreload 2
-```
 
 This repo contains code to track, label, and characterize the spatiotemporal evolution of marine heatwaves. 
 

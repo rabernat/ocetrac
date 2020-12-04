@@ -2,9 +2,8 @@
 
 __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 
-index = {"label_2D": "00_core.ipynb",
-         "track_3D": "00_core.ipynb",
-         "mhw": "00_core.ipynb"}
+index = {"label": "00_core.ipynb",
+         "track": "00_core.ipynb"}
 
 modules = ["core.py"]
 
