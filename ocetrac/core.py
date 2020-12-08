@@ -3,11 +3,19 @@
 __all__ = ['label', 'track']
 
 # Cell
-def label(da, fieldname):
-    '''2D image labeling'''
+def label(da):
+    '''2D image labeling
 
-    # pick a data variable
-    data = _check_input(da, fieldname)
+    Parameters
+    ----------
+    da : xarray.DataArray
+        The data to label
+
+    Returns
+    -------
+    labels : xarray.DataArray
+        Integer labels of connected regions.
+    '''
 
     # Converts data to binary, defines structuring element, and performs morphological closing then opening
     mo_binary = _morphological_operations(data, include_poles=False, radius=8)
@@ -47,18 +55,26 @@ def label(da, fieldname):
 #     num_2D_features = np.nanmax(keep_labels.values)
 #     print('Number of 2D labeled features = \t', num_2D_features)
 
-    ds_out = id_2D_area_bool.to_dataset(name='labels')
+    ds_out = id_2D_area_bool.rename('labels')
     ds_out.attrs['min_area'] = min_area
     ds_out.attrs['percent_area_kept'] = percent_area_kept
 
     return ds_out
 
 # Cell
-def track(da, fieldname):
-    '''Track labeled marine heatwaves'''
+def track(da):
+    '''Track labeled features
 
-    # pick a data variable
-    data = _check_input(da, fieldname)
+    Parameters
+    ----------
+    da : xarray.DataArray
+        The data in which to track features
+
+    Returns
+    -------
+    tracked : xarray.DataArray
+        Integer labels of tracked regions.
+    '''
 
     ####### Label with Skimage
     # relabel
@@ -71,7 +87,7 @@ def track(da, fieldname):
 
     print('final features \t', final_features)
 
-    dataout = mhw_id_3.to_dataset(name='labels')
+    dataout = mhw_id_3.rename('labels')
     dataout.attrs['total MHWs'] = final_features
     dataout.attrs['minimum size (km2)'] = data.attrs['min_area']
 #     dataout.attrs['minimum size percentile'] = min_size_quartile
