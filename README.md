@@ -1,5 +1,3 @@
-![](https://github.com/fastai/nbdev/workflows/CI/badge.svg)
-
 # Ocetrac
 > python package to track marine heatwaves.
 
